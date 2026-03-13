@@ -12,6 +12,7 @@ type VendorsViewProps = {
   setActiveCategory: (value: string) => void
   vendorTabRefs: MutableRefObject<Record<string, HTMLButtonElement | null>>
   vendorTabContainerRef: RefObject<HTMLDivElement | null>
+  vendorListRef: RefObject<HTMLDivElement | null>
   filteredVendors: Shop[]
   openVendorDetail: (vendor: Shop) => void
   formatMMK: (value: number) => string
@@ -28,6 +29,7 @@ export function VendorsView({
   setActiveCategory,
   vendorTabRefs,
   vendorTabContainerRef,
+  vendorListRef,
   filteredVendors,
   openVendorDetail,
   formatMMK,
@@ -35,8 +37,8 @@ export function VendorsView({
   itemVariants,
 }: VendorsViewProps) {
   return (
-    <main className="mx-auto max-w-[480px] pb-24 font-poppins">
-      <header className="rounded-b-[32px] bg-white px-4 pb-5 pt-5 shadow-[0_12px_26px_rgba(13,92,171,0.12)]">
+    <main className="mx-auto flex h-[100dvh] max-w-[480px] flex-col overflow-hidden font-poppins">
+      <header className="shrink-0 rounded-b-[32px] bg-white px-4 pb-5 pt-5 shadow-[0_12px_26px_rgba(13,92,171,0.12)]">
         <div className="relative flex items-center justify-center">
           <button
             type="button"
@@ -88,7 +90,7 @@ export function VendorsView({
         </div>
       </header>
 
-      <section className="px-4 pt-5">
+      <section ref={vendorListRef} className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain px-4 pb-28 pt-5">
         {filteredVendors.length === 0 ? (
           <article className="rounded-xl bg-white p-5 text-center text-sm text-slate-600 shadow-[0_10px_24px_rgba(15,23,42,0.08)]">
             No shops match this category or search.
@@ -109,7 +111,7 @@ export function VendorsView({
                   variants={itemVariants}
                   className="flex items-center gap-4 rounded-xl bg-white p-4 shadow-[0_12px_24px_rgba(15,23,42,0.08)]"
                 >
-                  <div className="relative w-24 shrink-0 overflow-hidden rounded-2xl aspect-[4/3]">
+                  <div className="relative aspect-[4/3] w-24 shrink-0 overflow-hidden rounded-2xl">
                     <img src={vendor.image} alt={vendor.name} className="h-full w-full object-cover" loading="lazy" />
                     <div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-slate-950/30 to-transparent" />
                   </div>
@@ -127,7 +129,9 @@ export function VendorsView({
                         <Star size={12} className="fill-[#F4C430] text-[#F4C430]" /> {vendor.rating}/5
                       </span>
                     </div>
-                    <p className="mt-2 text-xs font-medium text-slate-500">Starting from {formatMMK(vendor.startingPriceMMK)}</p>
+                    <p className="mt-2 whitespace-nowrap text-[11px] font-medium text-slate-500">
+                      Starting from {formatMMK(vendor.startingPriceMMK)} Ks
+                    </p>
                   </div>
 
                   <button

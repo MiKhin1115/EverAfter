@@ -45,6 +45,7 @@ import { TermsAndConditionsView } from './views/TermsAndConditionsView'
 import { FAQsView } from './views/FAQsView'
 import { ShopPartnerView } from './views/ShopPartnerView'
 import { WeddingBlogView } from './views/WeddingBlogView'
+import { EcoWeddingScoreView } from './views/EcoWeddingScoreView'
 import { AssistantWidget } from './components/assistant/AssistantWidget'
 import { Toast } from './components/ui/Toast'
 import { categories } from './data/catalog/categories'
@@ -78,6 +79,7 @@ type View =
   | 'compatibilityQuiz'
   | 'loveStoryGenerator'
   | 'honeymoonMatcher'
+  | 'ecoWeddingScore'
   | 'termsAndConditions'
   | 'faqs'
   | 'shopPartner'
@@ -97,6 +99,12 @@ type HomeCategoryItem = {
 type FilterState = {
   priceRange: [number, number]
   categories: string[]
+}
+
+type PackageFilterCategory = {
+  id: string
+  name: string
+  count: number
 }
 
 type SelectedPackage = CatalogPackage & {
@@ -310,8 +318,21 @@ const buildBudgetSelectionFromStorage = (): { selectedPackages: SelectedPackage[
 }
 
 function App() {
-  const categoryNameToId = useMemo(() => Object.fromEntries(categories.map((category) => [category.name, category.id])), [])
-  const filterCategories = useMemo(() => categories.map((category) => category.name), [])
+  const packageCategoryNameMap = useMemo(() => Object.fromEntries(categories.map((category) => [category.id, category.name])), [])
+  const filterCategories = useMemo<PackageFilterCategory[]>(() => {
+    const counts = catalogPackages.reduce<Map<string, number>>((map, pack) => {
+      map.set(pack.categoryId, (map.get(pack.categoryId) ?? 0) + 1)
+      return map
+    }, new Map())
+
+    return categories
+      .filter((category) => (counts.get(category.id) ?? 0) > 0)
+      .map((category) => ({
+        id: category.id,
+        name: category.name,
+        count: counts.get(category.id) ?? 0,
+      }))
+  }, [])
   const shopNameHints = useMemo(() => shops.map((shop) => shop.name), [])
   const initialFilters: FilterState = useMemo(
     () => ({
@@ -373,10 +394,11 @@ function App() {
   const { open: toastOpen, message: toastMessage } = useBudgetCartToast()
   const vendorTabRefs = useRef<Record<string, HTMLButtonElement | null>>({})
   const vendorTabContainerRef = useRef<HTMLDivElement | null>(null)
+  const vendorListRef = useRef<HTMLDivElement | null>(null)
   const scrollPositionsRef = useRef<Record<string, number>>({})
   const prevViewRef = useRef<View>(view)
 
-  const preserveScrollViews = useMemo(() => new Set<View>(['vendors', 'packages']), [])
+  const preserveWindowScrollViews = useMemo(() => new Set<View>(['packages']), [])
 
   useEffect(() => {
     const sliderTimer = window.setInterval(() => {
@@ -406,14 +428,24 @@ function App() {
     const previousView = prevViewRef.current
     if (previousView === view) return
 
-    if (preserveScrollViews.has(previousView)) {
+    if (previousView === 'vendors') {
+      scrollPositionsRef.current.vendors = vendorListRef.current?.scrollTop ?? 0
+    }
+
+    if (preserveWindowScrollViews.has(previousView)) {
       scrollPositionsRef.current[previousView] = window.scrollY
     }
 
-    const nextScroll = preserveScrollViews.has(view) ? scrollPositionsRef.current[view] ?? 0 : 0
-    window.scrollTo({ top: nextScroll, left: 0, behavior: 'auto' })
+    if (view === 'vendors') {
+      vendorListRef.current?.scrollTo({ top: scrollPositionsRef.current.vendors ?? 0, behavior: 'auto' })
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+    } else {
+      const nextScroll = preserveWindowScrollViews.has(view) ? scrollPositionsRef.current[view] ?? 0 : 0
+      window.scrollTo({ top: nextScroll, left: 0, behavior: 'auto' })
+    }
+
     prevViewRef.current = view
-  }, [preserveScrollViews, view])
+  }, [preserveWindowScrollViews, view])
 
   useEffect(() => {
     if (view !== 'home') return
@@ -565,6 +597,7 @@ function App() {
   const openWeddingCompatibilityAI = () => goTo('weddingCompatibilityAI')
   const openLoveStoryGenerator = () => goTo('loveStoryGenerator')
   const openHoneymoonMatcher = () => goTo('honeymoonMatcher')
+  const openEcoWeddingScore = () => goTo('ecoWeddingScore')
   const openProfile = () => goTo('profile')
   const openOrderHistory = () => goTo('orderHistory')
 
@@ -674,19 +707,21 @@ function App() {
     return catalogPackages.filter((item) => {
       const inPriceRange = item.priceMMK >= appliedFilters.priceRange[0] && item.priceMMK <= appliedFilters.priceRange[1]
       const inAssistantCategory = assistantPackageCategoryId === null || item.categoryId === assistantPackageCategoryId
-      const inCategory =
-        appliedFilters.categories.length === 0 ||
-        appliedFilters.categories.some((selectedName) => item.categoryId === categoryNameToId[selectedName])
+      const inCategory = appliedFilters.categories.length === 0 || appliedFilters.categories.includes(item.categoryId)
+      const categoryLabel = packageCategoryNameMap[item.categoryId]?.toLowerCase() ?? ''
+      const location = item.location?.toLowerCase() ?? ''
 
       const matchesQuery =
         query.length === 0 ||
         item.title.toLowerCase().includes(query) ||
         item.vendorName.toLowerCase().includes(query) ||
+        categoryLabel.includes(query) ||
+        location.includes(query) ||
         item.includesGroups.flatMap((group) => group.items).join(' ').toLowerCase().includes(query)
 
       return inPriceRange && inAssistantCategory && inCategory && matchesQuery
     })
-  }, [appliedFilters, packageSearch, categoryNameToId, assistantPackageCategoryId])
+  }, [appliedFilters, packageSearch, assistantPackageCategoryId, packageCategoryNameMap])
 
   const filteredVendors = useMemo(() => {
     const query = vendorSearch.trim().toLowerCase()
@@ -828,26 +863,32 @@ function App() {
     }))
   }
 
-  const toggleCategory = (category: string) => {
+  const toggleCategory = (categoryId: string) => {
     setDraftFilters((current) => {
-      const exists = current.categories.includes(category)
+      const exists = current.categories.includes(categoryId)
 
       return {
         ...current,
-        categories: exists ? current.categories.filter((item) => item !== category) : [...current.categories, category],
+        categories: exists ? current.categories.filter((item) => item !== categoryId) : [...current.categories, categoryId],
       }
     })
   }
 
   const applyFilters = () => {
     setAssistantPackageCategoryId(null)
-    setAppliedFilters(draftFilters)
+    setAppliedFilters({
+      priceRange: [...draftFilters.priceRange] as [number, number],
+      categories: [...draftFilters.categories],
+    })
     setIsFilterOpen(false)
   }
 
   const resetDraftFilters = () => {
     setAssistantPackageCategoryId(null)
-    setDraftFilters(initialFilters)
+    setDraftFilters({
+      priceRange: [...initialFilters.priceRange] as [number, number],
+      categories: [],
+    })
   }
 
   const openVendorDetail = (vendor: Shop) => {
@@ -1002,6 +1043,7 @@ function App() {
             openLoveStoryGenerator={openLoveStoryGenerator}
             openHoneymoonMatcher={openHoneymoonMatcher}
             openWeddingBlog={openWeddingBlog}
+            openEcoWeddingScore={openEcoWeddingScore}
           />
         )
       case 'packages':
@@ -1073,6 +1115,7 @@ function App() {
             setActiveCategory={setActiveCategory}
             vendorTabRefs={vendorTabRefs}
             vendorTabContainerRef={vendorTabContainerRef}
+            vendorListRef={vendorListRef}
             filteredVendors={filteredVendors}
             openVendorDetail={openVendorDetail}
             formatMMK={formatMMK}
@@ -1160,6 +1203,8 @@ function App() {
         return <LoveStoryGeneratorView goBack={goBack} goHome={() => goTo('home')} />
       case 'honeymoonMatcher':
         return <HoneymoonMatcherView goBack={goBack} openVendors={openVendors} />
+      case 'ecoWeddingScore':
+        return <EcoWeddingScoreView goBack={goBack} openVendors={openVendors} />
       case 'termsAndConditions':
         return <TermsAndConditionsView goBack={goBack} />
       case 'faqs':

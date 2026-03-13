@@ -37,8 +37,8 @@ export function VendorDetailView({
   const heroGalleryImages = galleryImages.slice(0, 3)
 
   return (
-    <main className="mx-auto max-w-[480px] pb-44 font-poppins">
-      <header className="rounded-b-[32px] bg-white px-4 pb-4 pt-5 shadow-[0_12px_26px_rgba(13,92,171,0.12)]">
+    <main className="mx-auto flex h-[100dvh] max-w-[480px] flex-col overflow-hidden font-poppins">
+      <header className="shrink-0 rounded-b-[32px] bg-white px-4 pb-4 pt-5 shadow-[0_12px_26px_rgba(13,92,171,0.12)]">
         <div className="relative flex items-center justify-center">
           <button
             type="button"
@@ -53,7 +53,7 @@ export function VendorDetailView({
       </header>
 
       {selectedVendor && (
-        <section className="space-y-4 px-4 pt-4">
+        <section className="min-h-0 flex-1 overflow-y-auto space-y-4 px-4 pb-44 pt-4">
           <article className="overflow-hidden rounded-3xl border border-[#E8F1FB] bg-white shadow-[0_10px_22px_rgba(13,92,171,0.12)]">
             <div className="relative p-2">
               {heroGalleryImages.length > 0 ? (
@@ -107,7 +107,7 @@ export function VendorDetailView({
               <div className="mt-5">
                 <p className="text-xs font-medium uppercase tracking-[0.14em] text-slate-500">Starting from</p>
                 <p className="mt-1 text-2xl font-semibold tracking-tight text-[#0D5CAB]">
-                  {formatMMK(selectedVendor.startingPriceMMK)} <span className="text-xs font-semibold text-[#0D5CAB]/70">MMK</span>
+                  {formatMMK(selectedVendor.startingPriceMMK)} <span className="text-xs font-semibold text-[#0D5CAB]/70">Ks</span>
                 </p>
               </div>
 
