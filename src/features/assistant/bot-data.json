@@ -1,0 +1,268 @@
+{
+  "defaults": {
+    "quickReplies": {
+      "en": [
+        "Find venue vendors",
+        "Find makeup packages",
+        "Budget under 3000000 MMK",
+        "KBZPay payment help"
+      ],
+      "mm": [
+        "Venue vendor ရှာပါ",
+        "Makeup package ရှာပါ",
+        "3000000 MMK အောက် budget",
+        "KBZPay ငွေပေးချေမှု help"
+      ]
+    },
+    "fallback": {
+      "en": "I can help with vendors, packages, booking, payment, and contact support. Tell me category, budget, city, event date, guest count, or style.",
+      "mm": "Vendor / package / booking / payment / contact support တွေကူညီပေးနိုင်ပါတယ်။ Category, budget, city, event date, guest count, style ကိုပြောပါ။"
+    },
+    "greeting": {
+      "en": "Hi, I am Romantix. I can help you find vendors and packages fast.",
+      "mm": "မင်္ဂလာပါ၊ Romantix ပါ။ Vendor နဲ့ package တွေကိုအမြန်ရှာပေးနိုင်ပါတယ်။"
+    },
+    "nextQuestion": {
+      "en": "To narrow it down, please share your budget, city, event date, guest count, and style.",
+      "mm": "ပိုတိကျအောင် budget, city, event date, guest count, style ကိုပြောပါ။"
+    }
+  },
+  "prompts": {
+    "budget": {
+      "en": "What is your budget in MMK?",
+      "mm": "Budget ဘယ်လောက် MMK သုံးမလဲ?"
+    },
+    "city": {
+      "en": "Which city is your wedding in?",
+      "mm": "ဘယ်မြို့မှာ မင်္ဂလာပွဲလုပ်မလဲ?"
+    },
+    "eventDate": {
+      "en": "What is your event date?",
+      "mm": "Event date ဘယ်နေ့လဲ?"
+    },
+    "guestCount": {
+      "en": "About how many guests?",
+      "mm": "Guest အရေအတွက် ခန့်မှန်းဘယ်လောက်လဲ?"
+    },
+    "style": {
+      "en": "Any preferred style (classic, modern, romantic, luxury)?",
+      "mm": "Style ဘာလိုချင်လဲ (classic, modern, romantic, luxury)?"
+    }
+  },
+  "intents": [
+    {
+      "id": "GREETING",
+      "reply": {
+        "en": "Hi there. I can help with venue, makeup, photo, dress, catering, honeymoon, and flowers.",
+        "mm": "ဟယ်လို။ Venue, makeup, photo, dress, catering, honeymoon, flowers တွေမှာကူညီပေးနိုင်ပါတယ်။"
+      },
+      "quickReplies": {
+        "en": ["Find venue vendors", "Find photography packages", "Booking help", "Payment help"],
+        "mm": ["Venue vendor ရှာပါ", "Photography package ရှာပါ", "Booking help", "Payment help"]
+      },
+      "synonyms": {
+        "en": ["hi", "hello", "hey", "good morning", "good evening", "yo", "halo"],
+        "mm": ["မင်္ဂလာပါ", "ဟယ်လို", "နေကောင်းလား", "မဂၤလာပါ"]
+      }
+    },
+    {
+      "id": "FIND_VENDOR",
+      "reply": {
+        "en": "I can open the vendor list for that category.",
+        "mm": "အဲဒီ category အတွက် vendor list ကိုဖွင့်ပေးနိုင်ပါတယ်။"
+      },
+      "quickReplies": {
+        "en": ["Venue vendors", "Makeup vendors", "Photography vendors", "Flower vendors"],
+        "mm": ["Venue vendors", "Makeup vendors", "Photography vendors", "Flower vendors"]
+      },
+      "synonyms": {
+        "en": [
+          "find vendor",
+          "vendor",
+          "shop",
+          "shops",
+          "recommend vendor",
+          "best vendor",
+          "where to find"
+        ],
+        "mm": [
+          "vendor",
+          "shop",
+          "ဆိုင်",
+          "ရှာပေး",
+          "အကြံပေး",
+          "ဘယ်မှာရ",
+          "ဘယ်vendor"
+        ]
+      }
+    },
+    {
+      "id": "FIND_PACKAGE",
+      "reply": {
+        "en": "I can open package options and shortlist based on your budget.",
+        "mm": "Package options ကိုဖွင့်ပြီး budget အလိုက် shortlist ပေးနိုင်ပါတယ်။"
+      },
+      "quickReplies": {
+        "en": ["Show packages", "Under 2000000 MMK", "Honeymoon packages", "Catering packages"],
+        "mm": ["Package ပြပါ", "2000000 MMK အောက်", "Honeymoon package", "Catering package"]
+      },
+      "synonyms": {
+        "en": [
+          "find package",
+          "package",
+          "packages",
+          "service package",
+          "offer",
+          "plan",
+          "deal"
+        ],
+        "mm": ["package", "service", "အစီအစဉ်", "offer", "plan", "ပက်ကေ့"]
+      }
+    },
+    {
+      "id": "BOOKING_HELP",
+      "reply": {
+        "en": "Booking flow: choose shop, open package, review customization, then book and pay.",
+        "mm": "Booking လုပ်ပုံ: shop ရွေး -> package ဖွင့် -> customization စစ် -> book + pay။"
+      },
+      "quickReplies": {
+        "en": ["How much deposit?", "Cancellation rules", "Contact support", "Find package"],
+        "mm": ["Deposit ဘယ်လောက်?", "Cancel policy", "Support ဆက်သွယ်", "Package ရှာပါ"]
+      },
+      "synonyms": {
+        "en": ["booking", "book", "reserve", "reservation", "how to book", "book now"],
+        "mm": ["booking", "book", "ကြိုတင်", "စရံ", "ဘယ်လိုbook", "အပ်မယ်"]
+      }
+    },
+    {
+      "id": "PAYMENT_HELP",
+      "reply": {
+        "en": "KBZPay is supported. Select your package, continue to payment, and confirm in app.",
+        "mm": "KBZPay ဖြင့်ပေးချေနိုင်ပါတယ်။ Package ရွေးပြီး payment step ထဲမှာ in-app အတည်ပြုပါ။"
+      },
+      "quickReplies": {
+        "en": ["KBZPay steps", "Deposit info", "Booking help", "Contact support"],
+        "mm": ["KBZPay steps", "Deposit info", "Booking help", "Support ဆက်သွယ်"]
+      },
+      "synonyms": {
+        "en": ["payment", "pay", "kbz", "kbzpay", "transfer", "invoice", "receipt"],
+        "mm": ["ငွေပေးချေ", "ပေးချေ", "kbz", "kbzpay", "ပိုက်ဆံ", "ပြေစာ"]
+      }
+    },
+    {
+      "id": "CANCEL_HELP",
+      "reply": {
+        "en": "Cancellation depends on each package policy. Open package detail to confirm refund windows.",
+        "mm": "Cancellation သတ်မှတ်ချက်က package တစ်ခုချင်းစီအလိုက်ကွာပါသည်။ Package detail မှာ refund window စစ်ပါ။"
+      },
+      "quickReplies": {
+        "en": ["Open my package", "Booking help", "Contact support", "Payment help"],
+        "mm": ["Package ဖွင့်ပါ", "Booking help", "Support ဆက်သွယ်", "Payment help"]
+      },
+      "synonyms": {
+        "en": ["cancel", "cancellation", "refund", "change booking", "reschedule"],
+        "mm": ["cancel", "ပယ်ဖျက်", "refund", "ပြန်အမ်း", "ရက်ရွှေ့", "ပြောင်းလဲ"]
+      }
+    },
+    {
+      "id": "CONTACT_HELP",
+      "reply": {
+        "en": "You can contact support via Telegram or Viber from the shop/package context.",
+        "mm": "Support ကို Telegram သို့မဟုတ် Viber ကနေ shop/package context နဲ့ဆက်သွယ်နိုင်ပါတယ်။"
+      },
+      "quickReplies": {
+        "en": ["Telegram support", "Viber support", "Booking help", "Payment help"],
+        "mm": ["Telegram support", "Viber support", "Booking help", "Payment help"]
+      },
+      "synonyms": {
+        "en": ["contact", "support", "telegram", "viber", "chat support", "help center"],
+        "mm": ["ဆက်သွယ်", "support", "telegram", "viber", "အကူအညီ", "ဖုန်း"]
+      }
+    },
+    {
+      "id": "BUDGET_HELP",
+      "reply": {
+        "en": "Share your max budget and I will suggest packages under it.",
+        "mm": "အများဆုံး budget ပြောပါ။ အောက်ပါ package တွေကိုရွေးပြပေးမယ်။"
+      },
+      "quickReplies": {
+        "en": ["Under 1000000 MMK", "Under 3000000 MMK", "Under 5000000 MMK", "Find packages"],
+        "mm": ["1000000 MMK အောက်", "3000000 MMK အောက်", "5000000 MMK အောက်", "Package ရှာပါ"]
+      },
+      "synonyms": {
+        "en": ["budget", "cheap", "affordable", "under", "max price", "low cost"],
+        "mm": ["budget", "ဈေးနည်း", "စျေးနည်း", "အောက်", "အများဆုံး", "ကုန်ကျ"]
+      }
+    },
+    {
+      "id": "FALLBACK",
+      "reply": {
+        "en": "I did not fully catch that. I can still help with vendors, packages, booking, payment, cancellation, and contact.",
+        "mm": "မေးခွန်းကိုတိတိကျကျမဖမ်းမိသေးပါ။ Vendor, package, booking, payment, cancellation, contact အတွက်ကူညီပေးနိုင်ပါတယ်။"
+      },
+      "quickReplies": {
+        "en": ["Find vendor", "Find package", "Booking help", "Payment help"],
+        "mm": ["Vendor ရှာပါ", "Package ရှာပါ", "Booking help", "Payment help"]
+      },
+      "synonyms": {
+        "en": [],
+        "mm": []
+      }
+    }
+  ],
+  "categoryKeywords": [
+    {
+      "categoryId": "venue",
+      "keywords": {
+        "en": ["venue", "hall", "ballroom", "hotel", "location", "place"],
+        "mm": ["နေရာ", "ခန်းမ", "ဟိုတယ်", "ပွဲခန်းမ"]
+      }
+    },
+    {
+      "categoryId": "bridal-beauty",
+      "keywords": {
+        "en": ["makeup", "beauty", "mua", "hair", "bridal makeup", "mu"],
+        "mm": ["မိတ်ကပ်", "beauty", "ဆံပင်", "make up", "မိတ်ကပ်ဆိုင်"]
+      }
+    },
+    {
+      "categoryId": "photography",
+      "keywords": {
+        "en": ["photo", "photography", "videography", "video", "camera", "prewedding", "photo graphy"],
+        "mm": ["ဓာတ်ပုံ", "ဗီဒီယို", "ဓာတ္ပံု", "video"]
+      }
+    },
+    {
+      "categoryId": "clothing-fashion",
+      "keywords": {
+        "en": ["dress", "gown", "clothing", "fashion", "suit", "outfit", "drss"],
+        "mm": ["အဝတ်", "ဝတ်စုံ", "ဂေါင်း", "ဖက်ရှင်", "ဝတ်ဆင်"]
+      }
+    },
+    {
+      "categoryId": "catering-cake",
+      "keywords": {
+        "en": ["catering", "cake", "menu", "buffet", "food", "catring"],
+        "mm": ["စားသောက်", "ကိတ်", "မီနူး", "အစားအသောက်"]
+      }
+    },
+    {
+      "categoryId": "decoration-floral",
+      "keywords": {
+        "en": ["flower", "floral", "decoration", "decor", "stage", "theme"],
+        "mm": ["ပန်း", "အလှဆင်", "stage", "theme"]
+      }
+    },
+    {
+      "categoryId": "honeymoon",
+      "keywords": {
+        "en": ["honeymoon", "travel", "trip", "beach", "villa", "resort"],
+        "mm": ["honeymoon", "ခရီး", "ပျော်ခရီး", "ကမ်းခြေ", "villa"]
+      }
+    }
+  ],
+  "contactChannels": {
+    "telegram": "Telegram support is available in-app.",
+    "viber": "Viber support is available in-app."
+  }
+}
